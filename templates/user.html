@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Demo</title>
+    <link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/static/style.css">
+    <script src="//cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
+    <script src="//cdn.bootcss.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <nav class="navbar navbar-fixed-top navbar-light navbar-bg navbar-border" role="navigation">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#forum-navbar-collapse">
+                    <span class="sr-only"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/">
+                    <span class="header-logo">
+                        <img src="/static/logo.png"/>
+                    </span>
+                    <span class="small">Demo</span>
+                </a>
+            </div>
+            <div class="collapse navbar-collapse" id="forum-navbar-collapse">
+                {% if not user %}
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <a href="/account/signup">注册</a>       
+                        </li>
+                        <li>
+                            <a href="/account/login">登录</a>         
+                        </li>
+                    </ul>
+                {% else %}
+                    <ul class="nav navbar-nav navbar-right">
+                        <li class="notification-container">
+                            <a rel="nofollow" href="/article">
+                                <span class="glyphicon glyphicon-pencil"></span>
+                                发布
+                            </a>
+                        </li>
+                        <li class="notification-container">
+                            <a href="/notification" title="消息">
+                            <span class="glyphicon glyphicon-bell"></span>
+                            消息
+                            </a>
+                        </li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle categories-link" data-toggle="dropdown" id="dropdownCategories" role="button" aria-haspopup="true" aria-expanded="false" title="Profile">
+                                <div class="avatar left">
+                                    {% if user.avatar %}
+                                    <img src="{{user.avatar}}">
+                                    {% else %}
+                                    <span class="text-{{user.username|first_lower}}">{{user.username|first_upper}}</span>
+                                    {% endif %}
+                                </div>
+                                &nbsp;{{user.username}}             
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownCategories">
+                                <li>
+                                    <a href="/user/{{user.username}}">
+                                        <span class="glyphicon glyphicon-home"></span>
+                                        &nbsp;&nbsp;<span>我的主页</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="/setting">
+                                        <span class="glyphicon glyphicon-cog"></span>
+                                        &nbsp;&nbsp;<span>我的设置</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="/account/logout">
+                                        <span class="glyphicon glyphicon-off"></span>
+                                        &nbsp;&nbsp;<span>退出</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                {% endif %}
+            </div>          
+        </div>
+    </nav>
+    <div class="main">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-9">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <span>创建的主题</span>
+                        </div>
+                        <div class="panel-body">
+                        {% if articles %}
+                            <div class="list-items">
+                                {% for article in articles %}
+                                    <div class="list-item">
+                                        <a href="/user/{{article.username}}">
+                                            <div class="avatar left">
+                                                {% if user.avatar %}
+                                                <img src="{{user.avatar}}">
+                                                {% else %}
+                                                <span class="text-{{user.username|first_lower}}">{{user.username|first_upper}}</span>
+                                                {% endif %}
+                                            </div>
+                                        </a>
+                                        <span class="category-link">{{article.tag}}</span>
+                                        <span class="title">
+                                            <a href="/discussion/{{article.id}}">{{article.title}}</a>
+                                        </span>
+                                        <span class="post-date">{{article.time}}</span>
+                                        <span class="round-number">{{article.comment_count}}</span>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <br>
+                            <div class="alert alert-info" align="center">暂无动态</div>
+                        {% endif %}
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <span>回复的主题</span>
+                        </div>
+                        <div class="panel-body">
+                        {% if comments %}
+                            <div class="reply-list">
+                                {% for comment in comments %}
+                                    <div class="reply-item">
+                                        <div class="reply-avatar">
+                                            <div class="avatar">
+                                                {% if user.avatar %}
+                                                <img src="{{user.avatar}}">
+                                                {% else %}
+                                                <span class="text-{{user.username|first_lower}}">{{user.username|first_upper}}</span>
+                                                {% endif %}
+                                            </div>                                        
+                                        </div>
+                                    <div>
+                                        <div class="info-header">
+                                            <a href="/user/{{comment.username}}"><span class="name">{{comment.username}}</span></a>
+                                            <span class="name">回复了 <a href="/discussion/{{comment.articleId}}">{{comment.article_title}}</a> </span>
+                                            <span class="date">{{comment.time}}</span>
+                                        </div>
+                                        <div class="info-content">{{comment.content}}</div>
+                                    </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <br>
+                            <div class="alert alert-info" align="center">暂无动态</div>
+                        {% endif %}
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <div class="profile-avatar">
+                                <div class="avatar avatar-big">
+                                    {% if user.avatar %}
+                                    <img src="{{user.avatar}}">
+                                    {% else %}
+                                    <span class="text-{{user.username|first_lower}}">{{user.username|first_upper}}</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="profile-username">
+                                <h1>{{user.username}}</h1>
+                            </div>
+                            <div class="profile-time">
+                                <span>于{{user.create_at}}加入</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <span>我的活动</span>
+                        </div>
+                        <div class="panel-body">
+                            <div class="statistics">
+                                <div>
+                                    <span>主题：</span>
+                                    <span>{{articles|length}}</span>                                  
+                                </div>
+                                <div>
+                                    <span>回复：</span>
+                                    <span>{{comments|length}}</span>                                  
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>      
+    </div>
+
+</body>
+</html>

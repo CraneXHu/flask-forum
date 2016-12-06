@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Demo</title>
+    <link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/simplemde/1.11.2/simplemde.min.css"/>
+    <link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css"/>
+    <link rel="stylesheet" type="text/css" href="/static/style.css">
+    <script src="//cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
+    <script src="//cdn.bootcss.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="//cdn.bootcss.com/simplemde/1.11.2/simplemde.min.js"></script>
+</head>
+<body>
+    <nav class="navbar navbar-fixed-top navbar-light navbar-bg navbar-border" role="navigation">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#forum-navbar-collapse">
+                    <span class="sr-only"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/">
+                    <span class="header-logo">
+                        <img src="/static/logo.png"/>
+                    </span>
+                    <span class="small">Demo</span>
+                </a>
+            </div>
+            <div class="collapse navbar-collapse" id="forum-navbar-collapse">
+                {% if not user %}
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <a href="/account/signup">注册</a>       
+                        </li>
+                        <li>
+                            <a href="/account/login">登录</a>         
+                        </li>
+                    </ul>
+                {% else %}
+                    <ul class="nav navbar-nav navbar-right">
+                        <li class="notification-container">
+                            <a rel="nofollow" href="/article">
+                                <span class="glyphicon glyphicon-pencil"></span>
+                                发布
+                            </a>
+                        </li>
+                        <li class="notification-container">
+                            <a href="/notification" title="消息">
+                            <span class="glyphicon glyphicon-bell"></span>
+                            消息
+                            </a>
+                        </li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle categories-link" data-toggle="dropdown" id="dropdownCategories" role="button" aria-haspopup="true" aria-expanded="false" title="Profile">
+                                <div class="avatar left">
+                                    {% if user.avatar %}
+                                    <img src="{{user.avatar}}">
+                                    {% else %}
+                                    <span class="text-{{user.username|first_lower}}">{{user.username|first_upper}}</span>
+                                    {% endif %}
+                                </div>
+                                &nbsp;{{user.username}}             
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownCategories">
+                                <li>
+                                    <a href="/user/{{user.username}}">
+                                        <span class="glyphicon glyphicon-home"></span>
+                                        &nbsp;&nbsp;<span>我的主页</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="/setting">
+                                        <span class="glyphicon glyphicon-cog"></span>
+                                        &nbsp;&nbsp;<span>我的设置</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="/account/logout">
+                                        <span class="glyphicon glyphicon-off"></span>
+                                        &nbsp;&nbsp;<span>退出</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                {% endif %}
+            </div>          
+        </div>
+    </nav>
+    <div class="main">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-7 col-md-offset-1 well well-bg">
+                    <form method="post" autocomplete="off" role="form">
+                        <div class="form-group">
+                            <input type="text" id="title" name="title" class="form-control" placeholder="标题" required="required"/>
+                        </div>
+                        <div class="form-group">
+                            <div id="comment-box">
+                                <div class="form-group">
+                                    <textarea id="contentArea" name="contentArea" class="form-control" rows="15" placeholder=""></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="clearfix">
+                            <div class="category-label">
+                                <span>分类:</span>
+                            </div>
+                            <div class="category-select" style="float:left;width:100px;">
+                                <select id="categoryId" name="tag" class="form-control" required="required">
+                                    <option value="问答">问答</option>
+                                    <option value="分享">分享</option>
+                                    <option value="教程">教程</option>
+                                    <option value="项目">项目</option>
+                                </select>
+                            </div>
+                            <div class="post-btn">
+                                <button type="submit" class="btn btn-sm btn-success pull-right">发布</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-md-3">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <span>社区统计</span>
+                        </div>
+                        <div class="panel-body">
+                            <div class="statistics">
+                                <div>
+                                    <span>成员：</span>
+                                    <span>{{statistics['user_count']}}</span>                                   
+                                </div>
+                                <div>
+                                    <span>主题：</span>
+                                    <span>{{statistics['article_count']}}</span>
+                                </div>
+                                <div>
+                                    <span>回复：</span>
+                                    <span>{{statistics['comment_count']}}</span>                  
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container footer" align="center">
+            Copyright © 2016
+            <span class="hidden-xs">pkhope</span>
+        </div>     
+    </div>
+    <script>
+        var simplemde = new SimpleMDE({
+            autoDownloadFontAwesome: false,
+            showIcons: ["code", "table"],
+            toolbar: ["bold", "italic", "heading", "|", "quote", "code", "|", "link", "image", "table", "|", "preview"],
+            hideIcons: ["guide"],
+            spellChecker: false,
+            status: false,
+            forceSync: true,
+            element: document.getElementById("contentArea"),
+        });
+    </script>
+</body>
+</html>

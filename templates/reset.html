@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Demo</title>
+	<link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="/static/style.css">
+	<script src="//cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
+	<script src="//cdn.bootcss.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function(){
+			$("form").bind("submit", function(){
+				var reg = /^\w+@\w+(\.[a-zA-Z]{2,3}){1,2}$/;
+				var email = $("input.form-control").attr("value")
+				if (reg.test(email) == false) {
+					$("span.text-email-error").show()
+					return false
+				}
+			})
+			$("span.text-email-error").hide()
+		})
+	</script>
+</head>
+<body>
+	<nav class="navbar navbar-fixed-top navbar-light navbar-bg navbar-border" role="navigation">
+		<div class="container">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#forum-navbar-collapse">
+					<span class="sr-only"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/">
+					<span class="header-logo">
+		                <img src="/static/logo.png"/>
+		            </span>
+		            <span class="small">Demo</span>
+				</a>
+			</div>
+			<div class="collapse navbar-collapse" id="forum-navbar-collapse">
+				<ul class="nav navbar-nav navbar-right">
+					<li>
+		            	<a href="/account/signup">注册</a>       
+		            </li>
+		        	<li>
+		            	<a href="/account/login">登录</a>         
+		            </li>
+		        </ul>
+		    </div>			
+		</div>
+	</nav>
+	<div class="main">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-4 col-md-offset-4">
+					<div class="panel panel-default">
+						<div class="panel-body">
+						{% if msg == None %}
+							<form method="post" accept-charset="utf-8" role="form">
+								<fieldset>
+									<div class="form-group">
+										<input class="form-control" type="password" name="password" placeholder="Password">
+									</div>
+									<div class="form-group">
+										<input class="form-control" type="password" name="confirmPassword" placeholder="Confirm Password">
+									</div>
+									<input class="btn btn-lg btn-success btn-block" type="submit" value="reset">
+								</fieldset>
+							</form>
+						{% else %}
+						    <br>
+                            <div class="alert alert-info" align="center">{{msg}}</div>
+						{% endif %}
+						</div>
+					</div>					
+				</div>
+	        </div>
+		</div>		
+	</div>
+
+</body>
+</html>
